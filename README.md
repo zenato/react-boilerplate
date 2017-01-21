@@ -44,4 +44,4 @@ Run built app.
 Test app.
 
 ## Demo
-[React boilerplate](https://react-universal-boilerplate.herokuapps.com)
+[React boilerplate](https://react-universal-boilerplate.herokuapp.com)
