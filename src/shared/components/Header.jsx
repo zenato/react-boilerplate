@@ -56,7 +56,7 @@ const Header = ({ user }) => (
               </span>
             } id="basic-nav-dropdown"
           >
-            <MenuItem eventKey={9.1} href="/signIn">
+            <MenuItem eventKey={9.1} href="/setting">
               <i className="fa fa-gear" /> Setting
             </MenuItem>
             <MenuItem divider />
