@@ -27,7 +27,7 @@ API_URL = https://your.api.server
 ```
 
 ### Run and debug
-`npm start`
+`npm run dev`
 
 Run app for develoment and debugging.
 
