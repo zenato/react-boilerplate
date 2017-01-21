@@ -1,0 +1,13 @@
+.DS_Store
+
+.idea/
+*.iml
+.env
+
+build/
+node_modules/
+
+*.log
+
+.tern-project
+jsconfig.json

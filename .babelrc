@@ -1,0 +1,19 @@
+{
+  "presets": [ "latest", "react" ],
+  "plugins": [
+    "syntax-trailing-function-commas",
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "transform-runtime"
+  ],
+  "env": {
+    "development": {
+      "plugins": [ "react-hot-loader/babel" ]
+    },
+    "production": {
+      "plugins": [ "transform-react-constant-elements" ]
+    }
+  },
+  "comments": false,
+  "sourceMaps": true
+}

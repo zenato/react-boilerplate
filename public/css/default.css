@@ -1,0 +1,19 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#container {
+  margin-top: 30px;
+}
+
+.invalid {
+  padding-left: 0.3em;
+  color: #950000;
+}
+
+img.profile {
+  max-height: 22px;
+  margin-right: 5px;
+}
+

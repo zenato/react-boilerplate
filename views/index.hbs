@@ -1,0 +1,12 @@
+<script type="text/javascript">
+  __STATE__ = {{{state}}};
+</script>
+
+<div id="app">{{{content}}}</div>
+
+{{#if (isProd)}}
+  <link rel="stylesheet" href="{{bundle 'main.css'}}" />
+  <script type="text/javascript" src="{{bundle 'main.js'}}"></script>
+{{else}}
+  <script type="text/javascript" src="{{bundle 'static/js/main.js'}}"></script>
+{{/if}}

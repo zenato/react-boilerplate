@@ -1,0 +1,5 @@
+config/*
+scripts/*
+
+webpack.config.*
+
