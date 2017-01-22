@@ -12,6 +12,7 @@ Create your react apps with boilerplate.
 - [x] Webpack
 - [x] ES2015 (ES6)
 - [x] Jest
+- [x] EJS
 
 ## Getting Started
 
