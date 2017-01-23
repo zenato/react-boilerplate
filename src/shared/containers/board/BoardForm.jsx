@@ -13,7 +13,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Helmet from '../../components/Helmet';
-import Loading from '../../components/Loading';
+import Indicator from '../../components/Indicator';
 import { Form, Input, TextArea } from '../../components/forms';
 import { fetchDetail, clearDetail, save, update } from '../../state/actions/board';
 
@@ -108,7 +108,7 @@ class BoardForm extends React.Component {
       <div>
         <Helmet />
 
-        <Loading isFetching={isFetching} error={error} />
+        <Indicator isFetching={isFetching} error={error} />
 
         {item && (
           <Form

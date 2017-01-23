@@ -14,7 +14,7 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Confirm from '../../components/Confirm';
 import Helmet from '../../components/Helmet';
-import Loading from '../../components/Loading';
+import Indicator from '../../components/Indicator';
 import { fetchDetail, remove } from '../../state/actions/board';
 
 class BoardView extends React.Component {
@@ -88,7 +88,7 @@ class BoardView extends React.Component {
 
     return (
       <div>
-        <Loading isFetching={isFetching} error={error} />
+        <Indicator isFetching={isFetching} error={error} />
 
         {item && (
           <div>

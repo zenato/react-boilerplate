@@ -6,7 +6,7 @@ import browserHistory from 'react-router/lib/browserHistory';
 import Table from 'react-bootstrap/lib/Table';
 import Helmet from '../../components/Helmet';
 import Pagination from '../../components/Pagination';
-import Loading from '../../components/Loading';
+import Indicator from '../../components/Indicator';
 import { BoardSearch, BoardListItem } from '../../components/board';
 import { fetchList } from '../../state/actions/board';
 
@@ -78,7 +78,7 @@ class BoardList extends Component {
           onCreate={this.handleCreate}
         />
 
-        <Loading isFetching={isFetching} error={error} />
+        <Indicator isFetching={isFetching} error={error} />
 
         {items && (
           <div>

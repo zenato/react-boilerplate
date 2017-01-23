@@ -10,7 +10,7 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from '../../components/Helmet';
-import Loading from '../../components/Loading';
+import Indicator from '../../components/Indicator';
 import { Form, Input } from '../../components/forms';
 import { signUp } from '../../state/actions/user';
 
@@ -85,7 +85,7 @@ class SignUp extends Component {
 
         <PageHeader>Sign Up</PageHeader>
 
-        <Loading isFetching={isFetching} error={error} renderError={SignUp.renderError} />
+        <Indicator isFetching={isFetching} error={error} renderError={SignUp.renderError} />
 
         <Form
           ref={c => (this.form = c)}

@@ -8,7 +8,7 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Helmet from '../../components/Helmet';
-import Loading from '../../components/Loading';
+import Indicator from '../../components/Indicator';
 import { Form, Input } from '../../components/forms';
 import { fetchSignedInfo, updateSignedInfo } from '../../state/actions/user';
 
@@ -86,7 +86,7 @@ class Setting extends Component {
 
         <PageHeader>Setting</PageHeader>
 
-        <Loading isFetching={isFetching} error={error} />
+        <Indicator isFetching={isFetching} error={error} />
 
         <Form
           ref={c => (this.form = c)}
