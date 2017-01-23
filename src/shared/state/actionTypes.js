@@ -1,6 +1,5 @@
 export const REQUEST = 'REQUEST';
-export const SUCCESS = 'SUCCESS';
-export const FAILURE = 'FAILURE';
+export const DONE = 'DONE';
 
 export const ACCESS_TOKEN = 'ACCESS_TOKEN';
 

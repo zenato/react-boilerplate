@@ -1,8 +1,7 @@
 import {
   ACCESS_TOKEN,
   REQUEST,
-  SUCCESS,
-  FAILURE,
+  DONE,
 } from '../actionTypes';
 
 function accessToken(state = '', action) {
@@ -17,8 +16,7 @@ function accessToken(state = '', action) {
 function isFetching(state = false, action) {
   switch (action.type) {
     case REQUEST:
-    case SUCCESS:
-    case FAILURE:
+    case DONE:
       return action.type === REQUEST;
     default:
       return state;
@@ -26,14 +24,13 @@ function isFetching(state = false, action) {
 }
 
 function error(state = null, action) {
-  switch (action.type) {
-    case REQUEST:
-    case SUCCESS:
-    case FAILURE:
-      return action.type === FAILURE ? action.error : null;
-    default:
-      return state;
+  if (action.type === REQUEST) {
+    return null;
   }
+  if (action.error) {
+    return action.error;
+  }
+  return state;
 }
 
 export default {

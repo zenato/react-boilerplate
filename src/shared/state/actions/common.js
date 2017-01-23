@@ -1,15 +1,12 @@
-import { formatError } from '../../lib/request';
-import { REQUEST, SUCCESS, FAILURE, ACCESS_TOKEN } from '../actionTypes';
+import { REQUEST, DONE, ACCESS_TOKEN } from '../actionTypes';
 
 const request = () => ({ type: REQUEST });
-const success = () => ({ type: SUCCESS });
-const failure = e => ({ type: FAILURE, error: formatError(e) });
+const done = () => ({ type: DONE });
 
 const saveAccessToken = accessToken => ({ type: ACCESS_TOKEN, accessToken });
 
 export {
   request,
-  success,
-  failure,
+  done,
   saveAccessToken,
 };
