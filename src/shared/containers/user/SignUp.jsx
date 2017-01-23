@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import browserHistory from 'react-router/lib/browserHistory';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
@@ -66,7 +67,7 @@ class SignUp extends Component {
     if (this.props.model.isFetching) return;
     this.props.signUp(values).then(() => {
       if (!this.props.model.error) {
-        window.location.replace('/signIn');
+        browserHistory.push({ pathname: '/signIn' });
       }
     });
   }

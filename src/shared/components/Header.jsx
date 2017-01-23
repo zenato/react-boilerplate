@@ -1,21 +1,21 @@
-import cookies from 'cookies-js';
 import React, { PropTypes } from 'react';
+import browserHistory from 'react-router/lib/browserHistory';
 import Nav from 'react-bootstrap/lib/Nav';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
-function signOut() {
-  cookies.expire('accessToken');
-  window.location.href = '/';
-}
+const push = pathname => (e) => {
+  e.preventDefault();
+  browserHistory.push({ pathname });
+};
 
-const Header = ({ user }) => (
+const Header = ({ user, signOut }) => (
   <Navbar inverse fixedTop>
     <Navbar.Header>
       <Navbar.Brand>
-        <a href="/">
+        <a href="" onClick={push('/')}>
           <i className="fa fa-mixcloud" /> React Universal
         </a>
       </Navbar.Brand>
@@ -34,7 +34,7 @@ const Header = ({ user }) => (
           <MenuItem eventKey={1.4}><i className="fa fa-picture-o" /> SubMenu 3</MenuItem>
         </NavDropdown>
 
-        <NavItem href="/board" eventKey={2}>
+        <NavItem eventKey={2} onClick={push('/board')}>
           <span><i className="fa fa-board" /> Board</span>
         </NavItem>
       </Nav>
@@ -56,7 +56,7 @@ const Header = ({ user }) => (
               </span>
             } id="basic-nav-dropdown"
           >
-            <MenuItem eventKey={9.1} href="/setting">
+            <MenuItem eventKey={9.1} onClick={push('/setting')}>
               <i className="fa fa-gear" /> Setting
             </MenuItem>
             <MenuItem divider />
@@ -69,10 +69,10 @@ const Header = ({ user }) => (
 
       {!user.signedInfo && (
         <Nav pullRight>
-          <NavItem href="/signIn" eventKey={1}>
+          <NavItem eventKey={1} onClick={push('/signIn')}>
             <span><i className="fa fa-sign-in" /> Sign In</span>
           </NavItem>
-          <NavItem href="/signUp" eventKey={1}>
+          <NavItem eventKey={1} onClick={push('/signUp')}>
             <span><i className="fa fa-users" /> Sign Up</span>
           </NavItem>
         </Nav>
@@ -83,6 +83,7 @@ const Header = ({ user }) => (
 
 Header.propTypes = {
   user: PropTypes.shape({}).isRequired,
+  signOut: PropTypes.func.isRequired,
 };
 
 export default Header;

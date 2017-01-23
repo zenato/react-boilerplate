@@ -25,6 +25,11 @@ const signIn = form => async (dispatch) => {
   }
 };
 
+const signOut = () => {
+  cookies.expire('accessToken');
+  return { type: USER_SUCCESS, signedInfo: null };
+};
+
 const signUp = form => async (dispatch) => {
   dispatch({ type: USER_REQUEST });
   try {
@@ -63,6 +68,7 @@ const updateSignedInfo = user => async (dispatch, getState) => {
 
 export {
   signIn,
+  signOut,
   signUp,
   fetchSignedInfo,
   updateSignedInfo,

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import browserHistory from 'react-router/lib/browserHistory';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
@@ -18,7 +19,7 @@ class SignIn extends Component {
     model: PropTypes.shape({
       isFetching: PropTypes.bool,
       error: PropTypes.shape({}),
-      info: PropTypes.shape({}),
+      signedInfo: PropTypes.shape({}),
     }).isRequired,
     location: PropTypes.shape({
       query: PropTypes.shape({
@@ -63,8 +64,12 @@ class SignIn extends Component {
   handleSubmit(values) {
     if (this.props.model.isFetching) return;
 
-    this.props.signIn(values)
-      .then(() => window.location.replace(this.props.location.query.next || '/'));
+    this.props.signIn(values).then(() => {
+      const { location, model } = this.props;
+      if (!model.error) {
+        browserHistory.push({ pathname: location.query.next });
+      }
+    });
   }
 
   handleValidationError(validationErrors) {
