@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
-import { signOut, fetchMe } from '../state/actions/user';
+import { signOut } from '../state/actions/user';
 import Header from '../components/Header';
 import './App.css';
 
@@ -20,7 +19,7 @@ class App extends Component {
 
   handleSignOut() {
     this.props.signOut();
-    browserHistory.push({ pathname: '/' });
+    window.location.href = '/';
   }
 
   render() {
@@ -40,6 +39,5 @@ export default connect(
   }),
   dispatch => bindActionCreators({
     signOut,
-    fetchMe,
   }, dispatch),
 )(App);

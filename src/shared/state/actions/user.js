@@ -27,7 +27,7 @@ const signIn = form => async (dispatch) => {
 
 const signOut = () => {
   cookies.expire('accessToken');
-  return { type: USER_SUCCESS, signedInfo: null };
+  return { type: USER_SUCCESS };
 };
 
 const signUp = form => async (dispatch) => {
