@@ -23,17 +23,6 @@ const Header = ({ user, signOut }) => (
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <NavDropdown
-          eventKey={1}
-          title={<span><i className="fa fa-database" /> Data</span>}
-          id="basic-nav-dropdown"
-        >
-          <MenuItem eventKey={1.1}><i className="fa fa-picture-o" /> SubMenu 1</MenuItem>
-          <MenuItem eventKey={1.2}><i className="fa fa-picture-o" /> SubMenu 2</MenuItem>
-          <MenuItem divider />
-          <MenuItem eventKey={1.4}><i className="fa fa-picture-o" /> SubMenu 3</MenuItem>
-        </NavDropdown>
-
         <NavItem eventKey={2} onClick={push('/board')}>
           <span><i className="fa fa-board" /> Board</span>
         </NavItem>
@@ -42,19 +31,16 @@ const Header = ({ user, signOut }) => (
       {user.signedInfo && (
         <Nav pullRight>
           <NavDropdown
+            id="basic-nav-dropdown"
             eventKey={9}
             title={
               <span>
                 {user.signedInfo.photo && (
-                  <img
-                    src={user.signedInfo.photo}
-                    className="profile img-circle"
-                    alt="uesr profile"
-                  />
+                  <img src={user.signedInfo.photo} className="profile img-circle" alt="uesr profile" />
                 )}
                 {user.signedInfo.name}
               </span>
-            } id="basic-nav-dropdown"
+            }
           >
             <MenuItem eventKey={9.1} onClick={push('/setting')}>
               <i className="fa fa-gear" /> Setting
