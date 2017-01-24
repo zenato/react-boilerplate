@@ -26,10 +26,13 @@ export default class ValidationForm extends React.Component {
     super(props, context);
 
     this.validation = {
-      errors: {},
       options: { fullMessages: false },
     };
     this.formControls = [];
+
+    this.state = {
+      validationErrors: {},
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -37,12 +40,14 @@ export default class ValidationForm extends React.Component {
     this.attachFormControl = this.attachFormControl.bind(this);
     this.getValues = this.getValues.bind(this);
     this.setValues = this.setValues.bind(this);
+    this.getValidationErrors = this.getValidationErrors.bind(this);
   }
 
   getChildContext() {
     return {
       form: {
         attachFormControl: this.attachFormControl,
+        getValidationErrors: this.getValidationErrors,
         onChange: this.handleChange,
         onBlur: this.handleBlur,
       },
@@ -61,42 +66,51 @@ export default class ValidationForm extends React.Component {
     this.formControls.forEach((formControl) => {
       formControl.setValue(values[formControl.props.name]);
     });
-    this.validation.errors = {};
-    this.props.onValidationError(this.validation.errors);
+    this.setState({ validationErrors: {} });
+    this.props.onValidationError(this.state.validationErrors);
+  }
+
+  getValidationErrors(name) {
+    return name ? this.state.validationErrors[name] : this.state.validationErrors;
   }
 
   handleSubmit(e) {
     e.preventDefault();
-
     const { constraints, onValidationError } = this.props;
     const values = this.getValues();
-
-    this.validation.errors = validate(values, constraints, this.validation.options) || {};
-    onValidationError(this.validation.errors);
-    if (isEmpty(this.validation.errors)) {
+    const validationErrors = validate(values, constraints, this.validation.options) || {};
+    this.setState({ validationErrors });
+    onValidationError(validationErrors);
+    if (isEmpty(validationErrors)) {
       this.formControls.forEach(el => (el.blur && el.blur()));
       this.props.onSubmit(values);
     }
   }
 
   handleChange(e) {
-    this.validation.errors[e.target.name] = null;
-    this.props.onValidationError(this.validation.errors);
+    this.setState({
+      validationErrors: {
+        ...this.state.validationErrors,
+        [e.target.name]: null,
+      },
+    });
+    this.props.onValidationError(this.state.validationErrors);
     this.props.onChange();
   }
 
   handleBlur(e) {
     const { name } = e.target;
     const constraint = { [name]: this.props.constraints[name] };
-    const prevState = this.validation.errors;
-    const validation =
+    const prevErrors = this.state.validationErrors;
+    const fieldError =
       validate(this.getValues(), constraint, this.validation.options) || { [name]: null };
-
-    this.validation.errors = {
-      ...prevState,
-      ...validation,
+    const validationErrors = {
+      ...prevErrors,
+      ...fieldError,
     };
-    this.props.onValidationError(this.validation.errors);
+
+    this.setState({ validationErrors });
+    this.props.onValidationError(validationErrors);
   }
 
   attachFormControl(component) {
@@ -106,10 +120,7 @@ export default class ValidationForm extends React.Component {
   render() {
     const props = omit(this.props, ['constraints', 'onValidationError']);
     return (
-      <form
-        {...props}
-        onSubmit={this.handleSubmit}
-      />
+      <form {...props} onSubmit={this.handleSubmit} />
     );
   }
 }

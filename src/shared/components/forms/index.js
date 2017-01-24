@@ -3,6 +3,8 @@ import Input from './Input';
 import TextArea from './TextArea';
 import CheckBox from './CheckBox';
 import RadioBox from './RadioBox';
+import FieldError from './FieldError';
+import FormGroup from './FormGroup';
 
 export {
   Form,
@@ -10,4 +12,6 @@ export {
   TextArea,
   CheckBox,
   RadioBox,
+  FieldError,
+  FormGroup,
 };

@@ -8,13 +8,11 @@ import browserHistory from 'react-router/lib/browserHistory';
 import Panel from 'react-bootstrap/lib/Panel';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Helmet from '../../components/Helmet';
 import Indicator from '../../components/Indicator';
-import { Form, Input, TextArea } from '../../components/forms';
+import { Form, Input, TextArea, FieldError, FormGroup } from '../../components/forms';
 import { fetchDetail, clearDetail, save, update } from '../../state/actions/board';
 
 class BoardForm extends React.Component {
@@ -47,26 +45,12 @@ class BoardForm extends React.Component {
       content: { presence: { message: 'Required' } },
     };
 
-    this.state = {
-      validationErrors: {},
-    };
-
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleValidationError = this.handleValidationError.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  getValidationState(prop) {
-    return this.state.validationErrors[prop] ? 'error' : null;
-  }
-
-  getValidationMessage(prop) {
-    return <HelpBlock>{this.state.validationErrors[prop]}</HelpBlock>;
   }
 
   handleSubmit(values) {
     const { params, model } = this.props;
-
     if (!model.isFetching) {
       if (!params.id) {
         this.props.save(values).then(() => {
@@ -85,10 +69,6 @@ class BoardForm extends React.Component {
         });
       }
     }
-  }
-
-  handleValidationError(validationErrors) {
-    this.setState({ validationErrors });
   }
 
   handleCancel() {
@@ -114,7 +94,6 @@ class BoardForm extends React.Component {
           <Form
             constraints={this.constraints}
             onSubmit={this.handleSubmit}
-            onValidationError={this.handleValidationError}
           >
             <Panel>
               <FormGroup>
@@ -122,27 +101,16 @@ class BoardForm extends React.Component {
                 <FormControl.Static>{signedInfo.name}</FormControl.Static>
               </FormGroup>
 
-              <FormGroup validationState={this.getValidationState('title')}>
+              <FormGroup name="title">
                 <ControlLabel>Title</ControlLabel>
-                <Input
-                  type="text"
-                  name="title"
-                  defaultValue={item.title}
-                  maxLength="50"
-                  placeholder="Title"
-                />
-                {this.getValidationMessage('title')}
+                <Input type="text" name="title" defaultValue={item.title} maxLength="50" placeholder="Title" />
+                <FieldError name="title" />
               </FormGroup>
 
-              <FormGroup validationState={this.getValidationState('content')}>
+              <FormGroup name="content">
                 <ControlLabel>Content</ControlLabel>
-                <TextArea
-                  name="content"
-                  defaultValue={item.content}
-                  rows="5"
-                  placeholder="Content"
-                />
-                {this.getValidationMessage('content')}
+                <TextArea name="content" defaultValue={item.content} rows="5" placeholder="Content" />
+                <FieldError name="content" />
               </FormGroup>
 
               {item.updatedAt && (

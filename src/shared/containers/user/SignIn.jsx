@@ -5,13 +5,11 @@ import browserHistory from 'react-router/lib/browserHistory';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Alert from 'react-bootstrap/lib/Alert';
 import Helmet from '../../components/Helmet';
 import Indicator from '../../components/Indicator';
-import { Form, Input } from '../../components/forms';
+import { Form, Input, FormGroup, FieldError } from '../../components/forms';
 import { signIn } from '../../state/actions/user';
 
 class SignIn extends Component {
@@ -45,20 +43,7 @@ class SignIn extends Component {
       password: { presence: { message: 'Required' } },
     };
 
-    this.state = {
-      validationErrors: {},
-    };
-
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleValidationError = this.handleValidationError.bind(this);
-  }
-
-  getValidationState(prop) {
-    return this.state.validationErrors[prop] ? 'error' : null;
-  }
-
-  getValidationMessage(prop) {
-    return <HelpBlock>{this.state.validationErrors[prop]}</HelpBlock>;
   }
 
   handleSubmit(values) {
@@ -70,10 +55,6 @@ class SignIn extends Component {
         browserHistory.push({ pathname: location.query.next });
       }
     });
-  }
-
-  handleValidationError(validationErrors) {
-    this.setState({ validationErrors });
   }
 
   render() {
@@ -91,25 +72,16 @@ class SignIn extends Component {
           ref={c => (this.form = c)}
           constraints={this.constraints}
           onSubmit={this.handleSubmit}
-          onValidationError={this.handleValidationError}
         >
-          <FormGroup validationState={this.getValidationState('email')}>
+          <FormGroup name="email">
             <ControlLabel>Email</ControlLabel>
-            <Input
-              type="text"
-              name="email"
-              placeholder="Email"
-            />
-            {this.getValidationMessage('email')}
+            <Input type="text" name="email" placeholder="Email" />
+            <FieldError name="email" />
           </FormGroup>
-          <FormGroup validationState={this.getValidationState('password')}>
+          <FormGroup name="password">
             <ControlLabel>Password</ControlLabel>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Passowrd"
-            />
-            {this.getValidationMessage('password')}
+            <Input type="password" name="password" placeholder="Passowrd" />
+            <FieldError name="password" />
           </FormGroup>
           <ButtonToolbar>
             <Button type="submit" bsStyle="primary" disabled={isFetching}>Sign In</Button>

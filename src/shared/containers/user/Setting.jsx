@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 import Helmet from '../../components/Helmet';
 import Indicator from '../../components/Indicator';
-import { Form, Input } from '../../components/forms';
+import { Form, Input, FormGroup, FieldError } from '../../components/forms';
 import { fetchSignedInfo, updateSignedInfo } from '../../state/actions/user';
 
 class Setting extends Component {
@@ -44,20 +42,7 @@ class Setting extends Component {
       },
     };
 
-    this.state = {
-      validationErrors: {},
-    };
-
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleValidationError = this.handleValidationError.bind(this);
-  }
-
-  getValidationState(prop) {
-    return this.state.validationErrors[prop] ? 'error' : null;
-  }
-
-  getValidationMessage(prop) {
-    return <HelpBlock>{this.state.validationErrors[prop]}</HelpBlock>;
   }
 
   handleSubmit(values) {
@@ -71,10 +56,6 @@ class Setting extends Component {
         });
       }
     });
-  }
-
-  handleValidationError(validationErrors) {
-    this.setState({ validationErrors });
   }
 
   render() {
@@ -92,39 +73,21 @@ class Setting extends Component {
           ref={c => (this.form = c)}
           constraints={this.constraints}
           onSubmit={this.handleSubmit}
-          onValidationError={this.handleValidationError}
         >
-          <FormGroup validationState={this.getValidationState('email')}>
+          <FormGroup name="email">
             <ControlLabel>Email</ControlLabel>
-            <Input
-              type="text"
-              name="email"
-              defaultValue={signedInfo.email}
-              maxLength="80"
-              placeholder="Email"
-            />
-            {this.getValidationMessage('email')}
+            <Input type="text" name="email" defaultValue={signedInfo.email} maxLength="80" placeholder="Email" />
+            <FieldError name="email" />
           </FormGroup>
-          <FormGroup validationState={this.getValidationState('name')}>
+          <FormGroup name="name">
             <ControlLabel>Name</ControlLabel>
-            <Input
-              type="text"
-              name="name"
-              defaultValue={signedInfo.name}
-              maxLength="100"
-              placeholder="Name"
-            />
-            {this.getValidationMessage('name')}
+            <Input type="text" name="name" defaultValue={signedInfo.name} maxLength="100" placeholder="Name" />
+            <FieldError name="name" />
           </FormGroup>
-          <FormGroup validationState={this.getValidationState('password')}>
+          <FormGroup name="password">
             <ControlLabel>Password</ControlLabel>
-            <Input
-              type="password"
-              name="password"
-              maxLength="100"
-              placeholder="Password"
-            />
-            {this.getValidationMessage('password')}
+            <Input type="password" name="password" maxLength="100" placeholder="Password" />
+            <FieldError name="password" />
           </FormGroup>
           <ButtonToolbar>
             <Button type="submit" bsStyle="primary" disabled={isFetching}>Save</Button>
