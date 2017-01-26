@@ -10,8 +10,9 @@ const EventEmitter = require('events');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const del = require('del');
+const ora = require('ora');
 const chokidar = require('chokidar');
-const { red, yellow, blue, green } = require('chalk');
+const { red, yellow, blue } = require('chalk');
 const paths = require('./config/paths');
 const clientConfig = require('./config/webpack/client.js');
 const serverConfig = require('./config/webpack/server.js');
@@ -22,39 +23,37 @@ class Emitter extends EventEmitter {}
 const emitter = new Emitter();
 
 // Only development build messages.
-function printPrettyMessages(messages) {
+function printPrettyMessages(messages, spinner, buildTarget) {
   if (messages.errors.length) {
-    console.log(red('Failed to compile.'));
+    spinner.fail(red(`Failed to ${buildTarget} compile.`));
     console.log();
     messages.errors.forEach(message => console.log(message));
-    console.log();
     return;
   }
 
   if (messages.warnings.length) {
-    console.log(yellow('Compiled with warnings.'));
+    spinner.succeed(yellow(`Compiled ${buildTarget} with warnings.`));
     console.log();
     messages.warnings.forEach(message => console.log(message));
-    console.log();
   }
 
   if (!messages.errors.length && !messages.warnings.length) {
-    console.log(blue('Successfully compiled.'));
-    console.log();
+    spinner.succeed(blue(`Successfully ${buildTarget} compiled.`));
   }
 }
 
 function configureClient() {
   const compiler = webpack(clientConfig);
+  const spinner = ora('Compiling client.');
 
   compiler.plugin('compile', () => {
     clearConsole();
-    console.log(green('Compiling client.'));
+    spinner.start();
   });
 
   compiler.plugin('done', (stats) => {
     const messages = formatWebpackMessages(stats.toJson({}, true));
-    printPrettyMessages(messages);
+    printPrettyMessages(messages, spinner, 'client');
     if (!messages.errors.length) {
       emitter.emit('server-compile');
     }
@@ -79,13 +78,12 @@ function configureServer() {
   let server;
 
   const compiler = webpack(serverConfig);
+  const spinner = ora('Compiling server.');
 
-  compiler.plugin('compile', () => {
-    console.log(green('Compiling server.'));
-  });
+  compiler.plugin('compile', () => spinner.start());
   compiler.plugin('done', (stats) => {
     const messages = formatWebpackMessages(stats.toJson({}, true));
-    printPrettyMessages(messages);
+    printPrettyMessages(messages, spinner, 'server');
     if (!messages.errors.length) {
       emitter.emit('server-restart');
     }

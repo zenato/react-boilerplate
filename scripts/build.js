@@ -7,7 +7,8 @@ if (!process.env.SKIP_LOAD_ENV && require('dotenv').config().error) {
 const EventEmitter = require('events');
 const webpack = require('webpack');
 const del = require('del');
-const { red, yellow, blue, green } = require('chalk');
+const ora = require('ora');
+const { red, yellow, blue } = require('chalk');
 const clientConfig = require('./config/webpack/client.js');
 const serverConfig = require('./config/webpack/server.js');
 const paths = require('./config/paths');
@@ -18,30 +19,28 @@ class Emitter extends EventEmitter {}
 const emitter = new Emitter();
 
 // Only production build messages.
-function printPrettyMessages(messages) {
+function printPrettyMessages(messages, spinner, buildTarget) {
   if (messages.errors.length) {
-    console.log(red('Failed to compile.'));
+    spinner.fail(red(`Failed to ${buildTarget} compile.`));
     console.log();
     messages.errors.forEach(message => console.log(message));
-    console.log();
     return;
   }
 
   if (messages.warnings.length) {
-    console.log(yellow('Compiled with warnings.'));
+    spinner.succeed(yellow(`Compiled ${buildTarget} with warnings.`));
     console.log();
     messages.warnings.forEach(message => console.log(message));
-    console.log();
   }
 
   if (!messages.errors.length && !messages.warnings.length) {
-    console.log(blue('Successfully compiled.'));
-    console.log();
+    spinner.succeed(blue(`Successfully ${buildTarget} compiled.`));
   }
 }
 
 function configureClient() {
   const compiler = webpack(clientConfig);
+  const spinner = ora('Compiling client.');
 
   compiler.plugin('compile', () => {
     if (!process.env.HEROKU) {
@@ -49,11 +48,11 @@ function configureClient() {
     } else {
       console.log();
     }
-    console.log(green('Compiling client.'));
+    spinner.start();
   });
   compiler.plugin('done', (stats) => {
     const messages = formatWebpackMessages(stats.toJson({}, true));
-    printPrettyMessages(messages);
+    printPrettyMessages(messages, spinner, 'client');
     if (!messages.errors.length) {
       emitter.emit('server-compile');
     }
@@ -66,13 +65,12 @@ function configureClient() {
 
 function configureServer() {
   const compiler = webpack(serverConfig);
+  const spinner = ora('Compiling server.');
 
-  compiler.plugin('compile', () => {
-    console.log(green('Compiling server.'));
-  });
+  compiler.plugin('compile', () => spinner.start());
   compiler.plugin('done', (stats) => {
     const messages = formatWebpackMessages(stats.toJson({}, true));
-    printPrettyMessages(messages);
+    printPrettyMessages(messages, spinner, 'server');
   });
 
   emitter.on('server-compile', () => {
