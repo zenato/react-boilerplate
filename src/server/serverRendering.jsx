@@ -35,7 +35,8 @@ export default (preload, cb) => async (req, res, next) => {
   try {
     await preload(req, res, store);
   } catch (e) {
-    return next(e);
+    next(e);
+    return;
   }
 
   match({
@@ -43,13 +44,16 @@ export default (preload, cb) => async (req, res, next) => {
     location: req.url,
   }, async (error, redirectLocation, renderProps) => {
     if (error) {
-      return next(error);
+      next(error);
+      return;
     }
     if (redirectLocation) {
-      return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+      res.redirect(302, redirectLocation.pathname + redirectLocation.search);
+      return;
     }
     if (!renderProps) {
-      return next();
+      next();
+      return;
     }
 
     try {
