@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import match from 'react-router/lib/match';
@@ -10,7 +9,6 @@ import RouterContextProvider from '../shared/components/router';
 import fetchData from '../shared/lib/fetchData';
 import reducers from '../shared/state/reducers';
 import routes from '../shared/routes';
-import auth from '../shared/routes/hooks/auth';
 
 const render = (res, store, renderProps, cb) => {
   const state = JSON.stringify(store.getState());
