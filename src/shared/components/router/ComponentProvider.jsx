@@ -19,7 +19,6 @@ export default class ComponentProvider extends React.Component {
   }
 
   render() {
-    // eslint-disable-next-line no-use-before-define
     const { Component, routerProps, ...props } = this.props;
     const { reload } = this.context.provider;
 
