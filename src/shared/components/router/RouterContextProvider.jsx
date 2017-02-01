@@ -6,8 +6,8 @@ import fetchData from '../../lib/fetchData';
 
 function createElement(Component, props) {
   return Component.fetchData
-    ? (<ComponentProvider Component={Component} routerProps={props} />)
-    : (<Component {...props} />);
+    ? <ComponentProvider Component={Component} routerProps={props} />
+    : <Component {...props} />;
 }
 
 export default class RouterContextProvider extends React.Component {
@@ -30,7 +30,7 @@ export default class RouterContextProvider extends React.Component {
 
   static defaultProps = {
     render(props) {
-      return (<RouterContext {...props} createElement={createElement} />);
+      return <RouterContext {...props} createElement={createElement} />;
     },
   };
 
