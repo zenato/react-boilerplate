@@ -9,6 +9,7 @@ import Pagination from '../../components/Pagination';
 import Indicator from '../../components/Indicator';
 import { BoardSearch, BoardListItem } from '../../components/board';
 import { fetchList } from '../../state/actions/board';
+import { isChangedLocation } from '../../lib/router';
 
 class BoardList extends Component {
   static propTypes = {
@@ -21,6 +22,7 @@ class BoardList extends Component {
       items: PropTypes.arrayOf(PropTypes.shape({})),
       pagination: PropTypes.shape({}),
     }).isRequired,
+    reload: PropTypes.func.isRequired,
   };
 
   static fetchData({ dispatch, location }) {
@@ -35,6 +37,12 @@ class BoardList extends Component {
     this.handleCreate = this.handleCreate.bind(this);
     this.handlePageSelect = this.handlePageSelect.bind(this);
     this.handleView = this.handleView.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (isChangedLocation(this.props.location, nextProps.location)) {
+      this.props.reload();
+    }
   }
 
   handlePageSelect(page) {

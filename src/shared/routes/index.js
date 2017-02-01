@@ -1,4 +1,4 @@
-import { loadRoute, loadIndexRoute } from '../lib/dynamicRoute';
+import { loadRoute, loadIndexRoute } from '../lib/router';
 import App from '../containers/App';
 import boardRoute from './board';
 import auth from './hooks/auth';

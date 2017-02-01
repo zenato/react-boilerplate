@@ -3,6 +3,7 @@ import RouterContext from 'react-router/lib/RouterContext';
 import difference from 'lodash/difference';
 import ComponentProvider from './ComponentProvider';
 import fetchData from '../../lib/fetchData';
+import { isChangedLocation } from '../../lib/router';
 
 function createElement(Component, props) {
   return Component.fetchData
@@ -24,10 +25,7 @@ export default class RouterContextProvider extends React.Component {
   static propTypes = {
     components: PropTypes.arrayOf(PropTypes.any),
     params: PropTypes.shape({}),
-    location: PropTypes.shape({
-      pathname: PropTypes.string.isRequired,
-      search: PropTypes.string.isRequired,
-    }),
+    location: PropTypes.shape({}),
     render: PropTypes.func,
   };
 
@@ -46,9 +44,7 @@ export default class RouterContextProvider extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const currentUrl = this.props.location.pathname + this.props.location.search;
-    const nextUrl = nextProps.location.pathname + nextProps.location.search;
-    if (currentUrl !== nextUrl) {
+    if (isChangedLocation(this.props.location, nextProps.location)) {
       const store = this.context.store;
       const { params, location } = nextProps;
       const components = difference(nextProps.components, this.props.components);

@@ -1,5 +1,5 @@
 import auth from './hooks/auth';
-import { loadRoute, loadIndexRoute } from '../lib/dynamicRoute';
+import { loadRoute, loadIndexRoute } from '../lib/router';
 
 export default function (store) {
   const form = {
