@@ -24,7 +24,10 @@ export default class RouterContextProvider extends React.Component {
   static propTypes = {
     components: PropTypes.arrayOf(PropTypes.any),
     params: PropTypes.shape({}),
-    location: PropTypes.shape({}),
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
+      search: PropTypes.string.isRequired,
+    }),
     render: PropTypes.func,
   };
 
@@ -43,25 +46,21 @@ export default class RouterContextProvider extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.location !== nextProps.location) {
+    const currentUrl = this.props.location.pathname + this.props.location.search;
+    const nextUrl = nextProps.location.pathname + nextProps.location.search;
+    if (currentUrl !== nextUrl) {
       const store = this.context.store;
       const { params, location } = nextProps;
-      if (!(location.state && location.state.preventFetchData)) {
-        const components = difference(nextProps.components, this.props.components);
-        if (components.length > 0) {
-          fetchData({ components, params, location, store });
-        }
-      }
+      const components = difference(nextProps.components, this.props.components);
+      fetchData({ components, params, location, store });
     }
   }
 
   reload(component) {
     const store = this.context.store;
     const { params, location } = this.props;
-    if (!(location.state && location.state.preventFetchData)) {
-      const components = component ? [component] : this.props.components;
-      fetchData({ components, params, location, store });
-    }
+    const components = component ? [component] : this.props.components;
+    fetchData({ components, params, location, store });
   }
 
   render() {

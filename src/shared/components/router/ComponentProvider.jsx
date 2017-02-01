@@ -10,27 +10,22 @@ export default class ComponentProvider extends React.Component {
     provider: PropTypes.object.isRequired,
   };
 
-  componentWillReceiveProps(nextProps) {
-    const { routerProps, Component } = this.props;
-    if (routerProps.location !== nextProps.routerProps.location
-      && Component === nextProps.Component) {
-      this.context.provider.reload(Component);
-    }
+  constructor(props) {
+    super(props);
+    this.handleReload = this.handleReload.bind(this);
+  }
+
+  handleReload(isFullReload) {
+    this.context.provider.reload(isFullReload ? null : this.props.Component);
   }
 
   render() {
     const { Component, routerProps, ...props } = this.props;
-    const { reload } = this.context.provider;
-
-    const handleReload = () => reload(Component);
-    const handleReloadAll = () => reload();
-
     return (
       <Component
         {...props}
         {...routerProps}
-        reload={handleReload}
-        reloadAll={handleReloadAll}
+        reload={this.handleReload}
       />
     );
   }
