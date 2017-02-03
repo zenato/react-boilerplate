@@ -3,7 +3,7 @@ import { resolveApp } from './paths';
 
 const debug = process.env.NODE_ENV === 'development';
 
-function getBundleLoader() {
+function loadBundle() {
   if (debug) {
     return path => `http://127.0.0.1:${process.env.DEV_PORT}/${path}`;
   }
@@ -11,7 +11,7 @@ function getBundleLoader() {
   return path => `/${manifest[path] || path}`;
 }
 
-const bundle = getBundleLoader();
+const bundle = loadBundle();
 
 export {
   bundle, // eslint-disable-line
