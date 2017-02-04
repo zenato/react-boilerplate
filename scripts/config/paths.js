@@ -16,5 +16,4 @@ module.exports = {
   webpackClientConfig: resolveOwn('./webpack/client.js'),
   webpackServerConfig: resolveOwn('./webpack/server.js'),
   manifest: 'asset-manifest.json',
-  appHtml: 'public/index.html',
 };
