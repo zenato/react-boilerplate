@@ -26,13 +26,6 @@ export default class RouterContextProvider extends React.Component {
     components: PropTypes.arrayOf(PropTypes.any),
     params: PropTypes.shape({}),
     location: PropTypes.shape({}),
-    render: PropTypes.func,
-  };
-
-  static defaultProps = {
-    render(props) {
-      return <RouterContext {...props} createElement={createElement} />;
-    },
   };
 
   getChildContext() {
@@ -45,10 +38,12 @@ export default class RouterContextProvider extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (isChangedLocation(this.props.location, nextProps.location)) {
-      const store = this.context.store;
-      const { params, location } = nextProps;
-      const components = difference(nextProps.components, this.props.components);
-      fetchData({ components, params, location, store });
+      fetchData({
+        components: difference(nextProps.components, this.props.components),
+        location: nextProps.location,
+        params: nextProps.params,
+        store: this.context.store,
+      });
     }
   }
 
@@ -60,6 +55,6 @@ export default class RouterContextProvider extends React.Component {
   }
 
   render() {
-    return this.props.render(this.props);
+    return <RouterContext {...this.props} createElement={createElement} />;
   }
 }
