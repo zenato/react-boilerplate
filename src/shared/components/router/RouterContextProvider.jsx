@@ -1,12 +1,13 @@
 import React, { PropTypes } from 'react';
 import RouterContext from 'react-router/lib/RouterContext';
 import difference from 'lodash/difference';
+import isFunction from 'lodash/isFunction';
 import ComponentProvider from './ComponentProvider';
 import fetchData from '../../lib/fetchData';
 import { isChangedLocation } from '../../lib/router';
 
 function createElement(Component, props) {
-  return Component.fetchData
+  return isFunction(Component.fetchData)
     ? <ComponentProvider Component={Component} routerProps={props} />
     : <Component {...props} />;
 }
