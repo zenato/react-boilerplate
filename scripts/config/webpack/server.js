@@ -66,8 +66,27 @@ const config = {
         include: paths.src,
       },
       {
-        test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-        loader: 'file?emitFile=false',
+        exclude: [
+          /\.html$/,
+          /\.(js|jsx)$/,
+          /\.css$/,
+          /\.json$/,
+          /\.svg$/,
+        ],
+        loader: 'url',
+        query: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:8].[ext]',
+          emitFile: false,
+        },
+      },
+      {
+        test: /\.svg$/,
+        loader: 'file',
+        query: {
+          name: 'static/media/[name].[hash:8].[ext]',
+          emitFile: false,
+        },
       },
     ],
   },
@@ -87,6 +106,17 @@ const config = {
   ],
 };
 
+// Development config
+if (debug) {
+  const host = process.env.HOST || 'localhost';
+
+  Object.assign(config.output, {
+    pathinfo: true,
+    publicPath: `http://${host}:${process.env.DEV_PORT}/`,
+  });
+}
+
+// Production config
 if (!debug) {
   config.bail = true;
 }

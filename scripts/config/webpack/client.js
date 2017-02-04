@@ -48,12 +48,25 @@ const config = {
         loader: 'json',
       },
       {
-        test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
-        loader: 'file?name=static/media/[name].[hash:8].[ext]',
+        exclude: [
+          /\.html$/,
+          /\.(js|jsx)$/,
+          /\.css$/,
+          /\.json$/,
+          /\.svg$/,
+        ],
+        loader: 'url',
+        query: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
       },
       {
-        test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-        loader: 'url?limit=10000&name=static/media/[name].[hash:8].[ext]',
+        test: /\.svg$/,
+        loader: 'file',
+        query: {
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
       },
     ],
   },
@@ -65,8 +78,7 @@ const config = {
   ],
 };
 
-
-// Debug config
+// Development config
 if (debug) {
   const host = process.env.HOST || 'localhost';
 
@@ -111,7 +123,6 @@ if (debug) {
     },
   }));
 }
-
 
 // Production config
 if (!debug) {
