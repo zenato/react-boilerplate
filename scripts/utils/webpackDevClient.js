@@ -54,6 +54,9 @@ function log(level, msg) {
   }
 }
 
+// Prevent duplicate invalid message for chunk files.
+var lastInvalid = new Date().getTime();
+
 var onSocketMsg = {
   hot: function() {
     hot = true;
@@ -62,7 +65,11 @@ var onSocketMsg = {
   invalid: function() {
     log('info', '[WDS] App updated. Recompiling...');
     if (quiet) {
-      console.log('Compiling.');
+      const received = new Date().getTime();
+      if (lastInvalid + 1000 < received) {
+        console.log('Compiling.');
+      }
+      lastInvalid = received;
     }
   },
   hash: function(hash) {
