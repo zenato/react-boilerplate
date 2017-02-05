@@ -5,7 +5,7 @@ const debug = process.env.NODE_ENV === 'development';
 
 function loadBundle() {
   if (debug) {
-    return path => `http://127.0.0.1:${process.env.DEV_PORT}/${path}`;
+    return path => `http://0.0.0.0:${process.env.DEV_PORT}/${path}`;
   }
   const manifest = JSON.parse(readFileSync(resolveApp(process.env.MANIFEST_PATH)));
   return path => `/${manifest[path] || path}`;
