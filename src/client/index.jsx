@@ -13,8 +13,8 @@ import routes from '../shared/routes';
 import RouterContextProvider from '../shared/components/router';
 
 // Configure redux store
-const state = __STATE__ || {}; // eslint-disable-line
-const composeEnhancers = __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line
+const state = window.__STATE__ || {}; // eslint-disable-line
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // eslint-disable-line
 const store = createStore(
   reducers,
   state,
