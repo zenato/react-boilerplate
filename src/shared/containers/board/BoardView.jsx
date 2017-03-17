@@ -17,6 +17,8 @@ import Helmet from '../../components/Helmet';
 import Indicator from '../../components/Indicator';
 import { fetchDetail, remove } from '../../state/actions/board';
 
+const toggleConfirmation = isShow => () => ({ showConfirmation: isShow });
+
 class BoardView extends React.Component {
   static propTypes = {
     params: PropTypes.shape({}).isRequired,
@@ -75,11 +77,11 @@ class BoardView extends React.Component {
   }
 
   handleShowConfirmation() {
-    this.setState({ showConfirmation: true });
+    this.setState(toggleConfirmation(true));
   }
 
   handleHideConfirmation() {
-    this.setState({ showConfirmation: false });
+    this.setState(toggleConfirmation(false));
   }
 
   render() {
