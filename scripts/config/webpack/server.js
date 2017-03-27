@@ -44,7 +44,7 @@ const config = {
   },
   externals: [nodeExternals()],
   module: {
-    loaders: [
+    rules: [
       {
         enforce: 'pre',
         test: /\.(js|jsx)$/,

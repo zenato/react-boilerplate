@@ -31,7 +31,7 @@ const config = {
     moduleExtensions: ['-loader'],
   },
   module: {
-    loaders: [
+    rules: [
       {
         enforce: 'pre',
         test: /\.(js|jsx)$/,
@@ -96,7 +96,7 @@ if (debug) {
     publicPath: `http://${host}:${process.env.DEV_PORT}/`,
   });
 
-  config.module.loaders.push({
+  config.module.rules.push({
     test: /\.css$/,
     include: paths.src,
     loader: 'style!css!postcss',
@@ -134,7 +134,7 @@ if (!debug) {
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
   });
 
-  config.module.loaders.push({
+  config.module.rules.push({
     test: /\.css$/,
     loader: ExtractTextPlugin.extract({
       fallbackLoader: 'style',
