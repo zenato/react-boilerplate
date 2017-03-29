@@ -36,7 +36,7 @@ const config = {
     libraryTarget: 'commonjs',
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.json'],
   },
   externals: [nodeExternals()],
   module: {
