@@ -12,7 +12,6 @@ module.exports = {
   nodeModules: resolveApp('node_modules'),
   testsSetup: resolveApp('src/testsSetup.js'),
   polyfills: resolveOwn('polyfills'),
-  ownNodeModules: resolveOwn('../../node_modules'),
   webpackClientConfig: resolveOwn('./webpack/client.js'),
   webpackServerConfig: resolveOwn('./webpack/server.js'),
   manifest: 'asset-manifest.json',

@@ -38,31 +38,23 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  resolveLoader: {
-    modules: [paths.ownNodeModules],
-    moduleExtensions: ['-loader'],
-  },
   externals: [nodeExternals()],
   module: {
     rules: [
       {
         enforce: 'pre',
         test: /\.(js|jsx)$/,
-        loader: 'eslint',
+        loader: 'eslint-loader',
         include: paths.src,
       },
       {
         test: /\.(js|jsx)$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: paths.src,
       },
       {
-        test: /\.json$/,
-        loader: 'json',
-      },
-      {
         test: /\.css$/,
-        loader: 'css/locals',
+        loader: 'css-loader/locals',
         include: paths.src,
       },
       {
@@ -73,7 +65,7 @@ const config = {
           /\.json$/,
           /\.svg$/,
         ],
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]',
@@ -82,7 +74,7 @@ const config = {
       },
       {
         test: /\.svg$/,
-        loader: 'file',
+        loader: 'file-loader',
         query: {
           name: 'static/media/[name].[hash:8].[ext]',
           emitFile: false,

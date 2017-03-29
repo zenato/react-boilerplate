@@ -3,7 +3,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const processEnv = require('../../utils/processEnv');
-const paths = require('./../paths');
+const paths = require('../paths');
 
 const debug = process.env.NODE_ENV === 'development';
 
@@ -26,26 +26,22 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  resolveLoader: {
-    modules: [paths.ownNodeModules],
-    moduleExtensions: ['-loader'],
-  },
   module: {
     rules: [
       {
         enforce: 'pre',
         test: /\.(js|jsx)$/,
-        loader: 'eslint',
+        loader: 'eslint-loader',
         include: paths.src,
       },
       {
         test: /\.(js|jsx)$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: paths.src,
       },
       {
         test: /\.json$/,
-        loader: 'json',
+        loader: 'json-loader',
       },
       {
         exclude: [
@@ -55,7 +51,7 @@ const config = {
           /\.json$/,
           /\.svg$/,
         ],
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]',
@@ -63,7 +59,7 @@ const config = {
       },
       {
         test: /\.svg$/,
-        loader: 'file',
+        loader: 'file-loader',
         query: {
           name: 'static/media/[name].[hash:8].[ext]',
         },
@@ -99,7 +95,11 @@ if (debug) {
   config.module.rules.push({
     test: /\.css$/,
     include: paths.src,
-    loader: 'style!css!postcss',
+    use: [
+      'style-loader',
+      'css-loader',
+      'postcss-loader',
+    ],
   });
 
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -136,9 +136,12 @@ if (!debug) {
 
   config.module.rules.push({
     test: /\.css$/,
-    loader: ExtractTextPlugin.extract({
-      fallbackLoader: 'style',
-      loader: 'css?-autoprefixer!postcss',
+    use: ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      use: [
+        'css-loader?-autoprefixer',
+        'postcss-loader',
+      ],
     }),
   });
 
