@@ -55,7 +55,6 @@ const config = {
       {
         test: /\.css$/,
         loader: 'css-loader/locals',
-        include: paths.src,
       },
       {
         exclude: [
@@ -63,19 +62,22 @@ const config = {
           /\.(js|jsx)$/,
           /\.css$/,
           /\.json$/,
-          /\.svg$/,
+          /\.bmp$/,
+          /\.gif$/,
+          /\.jpe?g$/,
+          /\.png$/,
         ],
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
+        loader: 'file-loader',
+        options: {
           name: 'static/media/[name].[hash:8].[ext]',
           emitFile: false,
         },
       },
       {
-        test: /\.svg$/,
-        loader: 'file-loader',
-        query: {
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]',
           emitFile: false,
         },
@@ -90,11 +92,6 @@ const config = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.DefinePlugin(envs),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        debug: true,
-      },
-    }),
   ],
 };
 
