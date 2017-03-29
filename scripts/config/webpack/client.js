@@ -14,6 +14,31 @@ const envs = processEnv({
   API_URL: process.env.API_URL,
 });
 
+const cssLoaders = [
+  {
+    loader: 'css-loader',
+    options: {
+      importLoaders: 1,
+    },
+  },
+  {
+    loader: 'postcss-loader',
+    options: {
+      ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+      plugins: () => [
+        autoprefixer({
+          browsers: [
+            '>1%',
+            'last 4 versions',
+            'Firefox ESR',
+            'not ie < 9', // React doesn't support IE8 anyway
+          ],
+        }),
+      ],
+    },
+  },
+];
+
 const config = {
   entry: [
     paths.polyfills,
@@ -93,31 +118,7 @@ if (debug) {
 
   config.module.rules.push({
     test: /\.css$/,
-    use: [
-      'style-loader',
-      {
-        loader: 'css-loader',
-        options: {
-          importLoaders: 1,
-        },
-      },
-      {
-        loader: 'postcss-loader',
-        options: {
-          ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-          plugins: () => [
-            autoprefixer({
-              browsers: [
-                '>1%',
-                'last 4 versions',
-                'Firefox ESR',
-                'not ie < 9', // React doesn't support IE8 anyway
-              ],
-            }),
-          ],
-        },
-      },
-    ],
+    use: ['style-loader'].concat(cssLoaders),
   });
 
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -139,30 +140,7 @@ if (!debug) {
     test: /\.css$/,
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',
-      use: [
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
-          },
-        },
-        {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-            plugins: () => [
-              autoprefixer({
-                browsers: [
-                  '>1%',
-                  'last 4 versions',
-                  'Firefox ESR',
-                  'not ie < 9', // React doesn't support IE8 anyway
-                ],
-              }),
-            ],
-          },
-        },
-      ],
+      use: [].concat(cssLoaders),
     }),
   });
 
