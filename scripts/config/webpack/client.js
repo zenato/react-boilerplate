@@ -118,7 +118,10 @@ if (debug) {
 
   config.module.rules.push({
     test: /\.css$/,
-    use: ['style-loader'].concat(cssLoaders),
+    use: [
+      'style-loader',
+      ...cssLoaders,
+    ],
   });
 
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -140,7 +143,7 @@ if (!debug) {
     test: /\.css$/,
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',
-      use: [].concat(cssLoaders),
+      use: cssLoaders,
     }),
   });
 
