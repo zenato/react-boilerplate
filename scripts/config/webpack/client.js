@@ -93,7 +93,6 @@ if (debug) {
 
   config.module.rules.push({
     test: /\.css$/,
-    include: paths.src,
     use: [
       'style-loader',
       {
