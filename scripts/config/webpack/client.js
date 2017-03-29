@@ -40,27 +40,26 @@ const config = {
         include: paths.src,
       },
       {
-        test: /\.json$/,
-        loader: 'json-loader',
-      },
-      {
         exclude: [
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
           /\.json$/,
-          /\.svg$/,
+          /\.bmp$/,
+          /\.gif$/,
+          /\.jpe?g$/,
+          /\.png$/,
         ],
-        loader: 'url-loader',
-        query: {
-          limit: 10000,
+        loader: 'file-loader',
+        options: {
           name: 'static/media/[name].[hash:8].[ext]',
         },
       },
       {
-        test: /\.svg$/,
-        loader: 'file-loader',
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: 'url-loader',
         query: {
+          limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]',
         },
       },
@@ -97,31 +96,34 @@ if (debug) {
     include: paths.src,
     use: [
       'style-loader',
-      'css-loader',
-      'postcss-loader',
+      {
+        loader: 'css-loader',
+        options: {
+          importLoaders: 1,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+          plugins: () => [
+            autoprefixer({
+              browsers: [
+                '>1%',
+                'last 4 versions',
+                'Firefox ESR',
+                'not ie < 9', // React doesn't support IE8 anyway
+              ],
+            }),
+          ],
+        },
+      },
     ],
   });
 
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
   config.plugins.push(new webpack.NoEmitOnErrorsPlugin());
   config.plugins.push(new webpack.NamedModulesPlugin());
-  config.plugins.push(new webpack.LoaderOptionsPlugin({
-    options: {
-      debug: true,
-      postcss: {
-        plugins: [
-          autoprefixer({
-            browsers: [
-              '>1%',
-              'last 4 versions',
-              'Firefox ESR',
-              'not ie < 9', // React doesn't support IE8 anyway
-            ],
-          }),
-        ],
-      },
-    },
-  }));
 }
 
 // Production config
@@ -139,8 +141,28 @@ if (!debug) {
     use: ExtractTextPlugin.extract({
       fallback: 'style-loader',
       use: [
-        'css-loader?-autoprefixer',
-        'postcss-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            importLoaders: 1,
+          },
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
+            plugins: () => [
+              autoprefixer({
+                browsers: [
+                  '>1%',
+                  'last 4 versions',
+                  'Firefox ESR',
+                  'not ie < 9', // React doesn't support IE8 anyway
+                ],
+              }),
+            ],
+          },
+        },
       ],
     }),
   });
