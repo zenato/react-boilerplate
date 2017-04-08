@@ -1,7 +1,8 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id", "_creator"] }] */
 
 import dateFormat from 'dateformat';
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import browserHistory from 'react-router/lib/browserHistory';

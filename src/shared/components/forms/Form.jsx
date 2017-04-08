@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
