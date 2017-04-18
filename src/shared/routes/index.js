@@ -7,14 +7,14 @@ export default function (store) {
   const signIn = {
     path: 'signIn',
     getComponent(nextState, cb) {
-      System.import('../containers/user/SignIn').then(loadRoute(cb));
+      import('../containers/user/SignIn').then(loadRoute(cb));
     },
   };
 
   const signUp = {
     path: 'signUp',
     getComponent(nextState, cb) {
-      System.import('../containers/user/SignUp').then(loadRoute(cb));
+      import('../containers/user/SignUp').then(loadRoute(cb));
     },
   };
 
@@ -22,7 +22,7 @@ export default function (store) {
     path: 'setting',
     onEnter: auth(store),
     getComponent(nextState, cb) {
-      System.import('../containers/user/Setting').then(loadRoute(cb));
+      import('../containers/user/Setting').then(loadRoute(cb));
     },
   };
 
@@ -34,7 +34,7 @@ export default function (store) {
         path: '/',
         component: App,
         getIndexRoute(nextState, cb) {
-          System.import('../containers/Main').then(loadIndexRoute(cb));
+          import('../containers/Main').then(loadIndexRoute(cb));
         },
         childRoutes: [
           signIn,

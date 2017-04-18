@@ -1,5 +1,9 @@
 {
-  "presets": [ "latest", "react" ],
+  "presets": [
+    "latest",
+    "stage-2",
+    "react"
+  ],
   "plugins": [
     "syntax-trailing-function-commas",
     "transform-class-properties",
