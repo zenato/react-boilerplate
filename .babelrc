@@ -1,6 +1,6 @@
 {
   "presets": [
-    "latest",
+    "env",
     "stage-2",
     "react"
   ],
@@ -11,9 +11,6 @@
     "transform-runtime"
   ],
   "env": {
-    "development": {
-      "plugins": [ "react-hot-loader/babel" ]
-    },
     "production": {
       "plugins": [ "transform-react-constant-elements" ]
     }

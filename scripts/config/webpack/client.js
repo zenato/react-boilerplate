@@ -116,6 +116,12 @@ if (debug) {
     publicPath: `http://${host}:${process.env.DEV_PORT}/`,
   });
 
+  config.module.rules.unshift({
+    test: /\.(js|jsx)$/,
+    loader: 'react-hot-loader/webpack',
+    include: paths.src,
+  });
+
   config.module.rules.push({
     test: /\.css$/,
     use: [
