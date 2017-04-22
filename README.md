@@ -3,7 +3,7 @@
 Create your react apps with boilerplate.
 
 This project use React Router v3.
-* [React Router v4](https://github.com/zenato/react-boilerplate/tree/rr4) – How to use React Router v4
+* [Using React Router v4](https://github.com/zenato/react-boilerplate/tree/rr4) – How to use React Router v4 (expermental project)
 
 ## Usage
 - [x] React
