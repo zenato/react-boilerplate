@@ -3,9 +3,9 @@
 import dateFormat from 'dateformat';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
 import Panel from 'react-bootstrap/lib/Panel';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
@@ -18,9 +18,16 @@ import { fetchDetail, clearDetail, save, update } from '../../state/actions/boar
 
 class BoardForm extends React.Component {
   static propTypes = {
-    params: PropTypes.shape({}).isRequired,
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.string,
+      }).isRequired,
+    }).isRequired,
     location: PropTypes.shape({
-      query: PropTypes.shape({}),
+      search: PropTypes.string,
+    }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
     }).isRequired,
     signedInfo: PropTypes.shape({}).isRequired,
     model: PropTypes.shape({
@@ -34,52 +41,55 @@ class BoardForm extends React.Component {
     update: PropTypes.func.isRequired,
   };
 
-  static fetchData({ dispatch, params }) {
-    return (!params.id) ? dispatch(clearDetail()) : dispatch(fetchDetail(params.id));
+  static fetchData({ dispatch, match }) {
+    return (!match.params.id)
+      ? dispatch(clearDetail())
+      : dispatch(fetchDetail(match.params.id));
   }
 
-  constructor(props) {
-    super(props);
+  constraints = {
+    title: { presence: { message: 'Required' } },
+    content: { presence: { message: 'Required' } },
+  };
 
-    this.constraints = {
-      title: { presence: { message: 'Required' } },
-      content: { presence: { message: 'Required' } },
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  handleSubmit(values) {
-    const { params, model } = this.props;
+  handleSubmit = (values) => {
+    const { match, model } = this.props;
     if (!model.isFetching) {
-      if (!params.id) {
+      if (!match.params.id) {
         this.props.save(values).then(() => {
           if (!this.props.model.error) {
-            browserHistory.push({ pathname: `/board/${this.props.model.item._id}` });
+            this.props.history.push({
+              pathname: `/board/${this.props.model.item._id}`,
+            });
           }
         });
       } else {
-        this.props.update(params.id, values).then(() => {
+        this.props.update(match.params.id, values).then(() => {
           if (!this.props.model.error) {
-            browserHistory.push({
-              pathname: `/board/${params.id}`,
-              query: this.props.location.query,
+            this.props.history.push({
+              pathname: `/board/${match.params.id}`,
+              search: this.props.location.search,
             });
           }
         });
       }
     }
-  }
+  };
 
-  handleCancel() {
-    const { params, location } = this.props;
-    if (params.id) {
-      browserHistory.push({ pathname: `/board/${params.id}`, query: location.query });
+  handleCancel = () => {
+    const { match, location } = this.props;
+    if (match.params.id) {
+      this.props.history.push({
+        pathname: `/board/${match.params.id}`,
+        search: location.search,
+      });
     } else {
-      browserHistory.push({ pathname: '/board', query: location.query });
+      this.props.history.push({
+        pathname: '/board',
+        search: location.search,
+      });
     }
-  }
+  };
 
   render() {
     const { signedInfo } = this.props;
@@ -135,7 +145,7 @@ class BoardForm extends React.Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({
     signedInfo: state.user.signedInfo,
     model: state.board.detail,
@@ -146,4 +156,4 @@ export default connect(
     save,
     update,
   }, dispatch),
-)(BoardForm);
+)(BoardForm));

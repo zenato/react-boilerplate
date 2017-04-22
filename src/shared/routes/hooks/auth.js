@@ -1,8 +1,10 @@
-export default store => ({ location }, replace, callback) => {
-  const { user } = store.getState();
-  if (!user.signedInfo) {
-    const next = encodeURIComponent(location.pathname + location.search);
-    replace(`/signIn?next=${next}`);
+const SIGNIN_URL = '/signIn';
+
+export default store => ({ location }) => {
+  const user = store.getState().user;
+  if (user.signedInfo) {
+    return null;
   }
-  callback();
+  const next = encodeURIComponent(location.pathname + location.search);
+  return `url:${SIGNIN_URL}?next=${next}`;
 };

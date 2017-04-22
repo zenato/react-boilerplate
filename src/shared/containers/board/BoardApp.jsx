@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
+import { renderRoutes } from '../../lib/router';
 
-const BoardApp = props => (
+const BoardApp = ({ routes }) => (
   <div>
     <PageHeader>Board</PageHeader>
-    {props.children}
+    {renderRoutes(routes)}
   </div>
 );
 
 BoardApp.propTypes = {
-  children: PropTypes.node.isRequired,
+  routes: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default BoardApp;

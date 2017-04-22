@@ -9,7 +9,14 @@ import {
   BOARD_DETAIL_FAILURE,
 } from '../actionTypes';
 
-function list(state = {}, action) {
+const initList = {
+  error: null,
+  items: null,
+  pagination: null,
+  isFetching: false,
+};
+
+function list(state = initList, action) {
   const { type, error, items, pagination } = action;
   switch (type) {
     case BOARD_LIST_REQUEST:
@@ -27,7 +34,13 @@ function list(state = {}, action) {
   }
 }
 
-function detail(state = {}, action) {
+const initDetail = {
+  error: null,
+  item: null,
+  isFetching: false,
+};
+
+function detail(state = initDetail, action) {
   const { type, error, item } = action;
   switch (type) {
     case BOARD_DETAIL_REQUEST:

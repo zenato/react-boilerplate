@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
@@ -13,8 +13,19 @@ import Indicator from '../../components/Indicator';
 import { Form, Input, FormGroup, FieldError } from '../../components/forms';
 import { signUp } from '../../state/actions/user';
 
+const renderError = (error) => {
+  let message = 'Failure on request.';
+  if (error.data && error.data.alreadyExists) {
+    message = 'Already signed email.';
+  }
+  return <Alert bsStyle="danger">{message}</Alert>;
+};
+
 class SignUp extends Component {
   static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
     model: PropTypes.shape({
       isFetching: PropTypes.bool.isRequired,
       error: PropTypes.shape({}),
@@ -23,57 +34,43 @@ class SignUp extends Component {
     signUp: PropTypes.func.isRequired,
   };
 
-  static renderError(error) {
-    let message = 'Failure on request.';
-    if (error.data && error.data.alreadyExists) {
-      message = 'Already signed email.';
-    }
-    return <Alert bsStyle="danger">{message}</Alert>;
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.constraints = {
-      email: { presence: { message: 'Required' } },
-      name: { presence: { message: 'Required' } },
-      password: {
-        presence: true,
-        length: {
-          minimum: 6,
-          maximum: 20,
-        },
+  constraints = {
+    email: { presence: { message: 'Required' } },
+    name: { presence: { message: 'Required' } },
+    password: {
+      presence: true,
+      length: {
+        minimum: 6,
+        maximum: 20,
       },
-    };
+    },
+  };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(values) {
-    if (this.props.model.isFetching) return;
+  handleSubmit = (values) => {
+    if (this.props.model.isFetching) {
+      return;
+    }
     this.props.signUp(values).then(() => {
       if (!this.props.model.error) {
-        browserHistory.push({ pathname: '/signIn' });
+        this.props.history.push({ pathname: '/signIn' });
       }
     });
-  }
+  };
 
   render() {
     const { isFetching, error } = this.props.model;
-
     return (
       <div>
         <Helmet title="Sign Up" />
 
         <PageHeader>Sign Up</PageHeader>
 
-        <Indicator isFetching={isFetching} error={error} renderError={SignUp.renderError} />
+        <Indicator isFetching={isFetching} error={error} renderError={renderError} />
 
         <Form
           ref={c => (this.form = c)}
           constraints={this.constraints}
           onSubmit={this.handleSubmit}
-          onValidationError={this.handleValidationError}
         >
           <FormGroup name="email">
             <ControlLabel>Email</ControlLabel>
@@ -99,12 +96,12 @@ class SignUp extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({
     model: state.user,
   }),
   dispatch => bindActionCreators({
     signUp,
   }, dispatch),
-)(SignUp);
+)(SignUp));
 

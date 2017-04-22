@@ -1,48 +1,46 @@
-import { loadRoute, loadIndexRoute } from '../lib/router';
-import App from '../containers/App';
-import boardRoute from './board';
 import auth from './hooks/auth';
 
-export default function (store) {
-  const signIn = {
-    path: 'signIn',
-    getComponent(nextState, cb) {
-      import('../containers/user/SignIn').then(loadRoute(cb));
-    },
-  };
-
-  const signUp = {
-    path: 'signUp',
-    getComponent(nextState, cb) {
-      import('../containers/user/SignUp').then(loadRoute(cb));
-    },
-  };
-
-  const setting = {
-    path: 'setting',
-    onEnter: auth(store),
-    getComponent(nextState, cb) {
-      import('../containers/user/Setting').then(loadRoute(cb));
-    },
-  };
-
-  const board = boardRoute(store);
-
-  return ({
-    childRoutes: [
+export default store => [
+  {
+    path: '/',
+    exact: true,
+    component: () => import('../containers/Main'),
+  },
+  {
+    path: '/signIn',
+    component: () => import('../containers/user/SignIn'),
+  },
+  {
+    path: '/signUp',
+    component: () => import('../containers/user/SignUp'),
+  },
+  {
+    path: '/setting',
+    component: () => import('../containers/user/Setting'),
+  },
+  {
+    path: '/board',
+    component: () => import('../containers/board/BoardApp'),
+    routes: [
       {
-        path: '/',
-        component: App,
-        getIndexRoute(nextState, cb) {
-          import('../containers/Main').then(loadIndexRoute(cb));
-        },
-        childRoutes: [
-          signIn,
-          signUp,
-          setting,
-          board,
-        ],
+        path: '/board',
+        exact: true,
+        component: () => import('../containers/board/BoardList'),
+      },
+      {
+        path: '/board/new',
+        enter: auth(store),
+        component: () => import('../containers/board/BoardForm'),
+      },
+      {
+        path: '/board/edit/:id',
+        enter: auth(store),
+        component: () => import('../containers/board/BoardForm'),
+      },
+      {
+        path: '/board/:id',
+        component: () => import('../containers/board/BoardView'),
       },
     ],
-  });
-}
+  },
+];

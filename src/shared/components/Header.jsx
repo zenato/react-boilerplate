@@ -1,30 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import browserHistory from 'react-router/lib/browserHistory';
+import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import Nav from 'react-bootstrap/lib/Nav';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 
-const push = pathname => (e) => {
-  e.preventDefault();
-  browserHistory.push({ pathname });
-};
-
-const Header = ({ user, signOut }) => (
+const Header = ({ user, signOut, history }) => (
   <Navbar inverse fixedTop>
     <Navbar.Header>
       <Navbar.Brand>
-        <a href="" onClick={push('/')}>
+        <Link to="/">
           <i className="fa fa-mixcloud" /> React Universal
-        </a>
+        </Link>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
     <Navbar.Collapse>
       <Nav>
-        <NavItem eventKey={2} onClick={push('/board')}>
+        <NavItem eventKey={2} onClick={() => history.push('/board')}>
           <span><i className="fa fa-board" /> Board</span>
         </NavItem>
       </Nav>
@@ -43,7 +39,7 @@ const Header = ({ user, signOut }) => (
               </span>
             }
           >
-            <MenuItem eventKey={9.1} onClick={push('/setting')}>
+            <MenuItem eventKey={9.1} onClick={() => history.push('/setting')}>
               <i className="fa fa-gear" /> Setting
             </MenuItem>
             <MenuItem divider />
@@ -56,10 +52,10 @@ const Header = ({ user, signOut }) => (
 
       {!user.signedInfo && (
         <Nav pullRight>
-          <NavItem eventKey={1} onClick={push('/signIn')}>
+          <NavItem eventKey={1} onClick={() => history.push('/signIn')}>
             <span><i className="fa fa-sign-in" /> Sign In</span>
           </NavItem>
-          <NavItem eventKey={1} onClick={push('/signUp')}>
+          <NavItem eventKey={1} onClick={() => history.push('/signUp')}>
             <span><i className="fa fa-users" /> Sign Up</span>
           </NavItem>
         </Nav>
@@ -69,8 +65,9 @@ const Header = ({ user, signOut }) => (
 );
 
 Header.propTypes = {
+  history: PropTypes.shape({}).isRequired,
   user: PropTypes.shape({}).isRequired,
   signOut: PropTypes.func.isRequired,
 };
 
-export default Header;
+export default withRouter(Header);

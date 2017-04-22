@@ -1,21 +1,26 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 
+import qs from 'querystring';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
 import Table from 'react-bootstrap/lib/Table';
 import Helmet from '../../components/Helmet';
 import Pagination from '../../components/Pagination';
 import Indicator from '../../components/Indicator';
 import { BoardSearch, BoardListItem } from '../../components/board';
 import { fetchList } from '../../state/actions/board';
-import { isChangedLocation } from '../../lib/router';
 
 class BoardList extends Component {
   static propTypes = {
     location: PropTypes.shape({
       pathname: PropTypes.string.isRequired,
+      search: PropTypes.string,
+    }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
     }).isRequired,
     model: PropTypes.shape({
       isFetching: PropTypes.bool.isRequired,
@@ -23,54 +28,57 @@ class BoardList extends Component {
       items: PropTypes.arrayOf(PropTypes.shape({})),
       pagination: PropTypes.shape({}),
     }).isRequired,
-    reload: PropTypes.func.isRequired,
+    fetchList: PropTypes.func.isRequired,
   };
 
   static fetchData({ dispatch, location }) {
-    return dispatch(fetchList(location.query));
-  }
-
-  constructor(props) {
-    super(props);
-
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleInitialize = this.handleInitialize.bind(this);
-    this.handleCreate = this.handleCreate.bind(this);
-    this.handlePageSelect = this.handlePageSelect.bind(this);
-    this.handleView = this.handleView.bind(this);
+    const query = qs.parse(location.search.substring(1));
+    return dispatch(fetchList(query));
   }
 
   componentWillReceiveProps(nextProps) {
-    if (isChangedLocation(this.props.location, nextProps.location)) {
-      this.props.reload();
+    if (nextProps.location.search !== this.props.location.search) {
+      const query = qs.parse(nextProps.location.search.substring(1));
+      this.props.fetchList(query);
     }
   }
 
-  handlePageSelect(page) {
+  handlePageSelect = (page) => {
     const { location } = this.props;
-    browserHistory.push({
-      pathname: location.pathname,
-      query: { ...location.query, page },
+    this.props.history.push({
+      search: qs.stringify({
+        ...qs.parse(location.search.substring(1)),
+        page,
+      }),
     });
-  }
+  };
 
-  handleSearch(query) {
-    browserHistory.push({ pathname: this.props.location.pathname, query });
-  }
+  handleSearch = (query) => {
+    this.props.history.push({
+      search: qs.stringify(query),
+    });
+  };
 
-  handleInitialize() {
-    browserHistory.push({ pathname: this.props.location.pathname });
-  }
+  handleInitialize = () => {
+    this.props.history.push({
+      pathname: this.props.location.pathname,
+    });
+  };
 
-  handleCreate() {
-    const { location: { query } } = this.props;
-    browserHistory.push({ pathname: '/board/new', query });
-  }
+  handleCreate = () => {
+    this.props.history.push({
+      pathname: '/board/new',
+      search: this.props.location.search,
+    });
+  };
 
-  handleView(id) {
+  handleView = (id) => {
     const location = this.props.location;
-    browserHistory.push({ pathname: `${location.pathname}/${id}`, query: location.query });
-  }
+    this.props.history.push({
+      pathname: `${location.pathname}/${id}`,
+      search: location.search,
+    });
+  };
 
   render() {
     const { location } = this.props;
@@ -81,7 +89,7 @@ class BoardList extends Component {
         <Helmet title="Board" />
 
         <BoardSearch
-          values={location.query}
+          values={qs.parse(location.search.substring(1))}
           onSubmit={this.handleSearch}
           onReset={this.handleInitialize}
           onCreate={this.handleCreate}
@@ -126,7 +134,7 @@ class BoardList extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({ model: state.board.list }),
-)(BoardList);
-
+  dispatch => bindActionCreators({ fetchList }, dispatch),
+)(BoardList));

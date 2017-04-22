@@ -1,13 +1,16 @@
-export default function ({ store, components, location, params }) {
-  const functions = (components || []).reduce((prev, current) =>
-    (current && current.fetchData ? [current.fetchData] : []).concat(prev)
-  , []);
-
+export default function ({ store, components, location }) {
   const dispatch = store.dispatch;
-  const promises = functions.map(func => func({
-    dispatch,
-    location,
-    params,
-  }));
+
+  const promises = components.map(({ component, match }) => {
+    if (component.fetchData) {
+      return component.fetchData({
+        dispatch,
+        location,
+        match,
+      });
+    }
+    return Promise.resolve();
+  });
+
   return Promise.all(promises);
 }

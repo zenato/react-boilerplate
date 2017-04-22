@@ -3,9 +3,9 @@
 import dateFormat from 'dateformat';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
 import Panel from 'react-bootstrap/lib/Panel';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
@@ -22,8 +22,18 @@ const toggleConfirmation = isShow => () => ({ showConfirmation: isShow });
 
 class BoardView extends React.Component {
   static propTypes = {
-    params: PropTypes.shape({}).isRequired,
-    location: PropTypes.shape({}).isRequired,
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+      goBack: PropTypes.func.isRequired,
+    }).isRequired,
+    location: PropTypes.shape({
+      search: PropTypes.string,
+    }).isRequired,
     signedInfo: PropTypes.shape({}),
     model: PropTypes.shape({
       isFetching: PropTypes.bool.isRequired,
@@ -37,53 +47,43 @@ class BoardView extends React.Component {
     signedInfo: null,
   };
 
-  static fetchData({ dispatch, params }) {
-    return dispatch(fetchDetail(params.id));
+  static fetchData({ dispatch, match }) {
+    return dispatch(fetchDetail(match.params.id));
   }
 
-  constructor(props) {
-    super(props);
+  state = {
+    showConfirmation: false,
+  };
 
-    this.state = {
-      showConfirmation: false,
-    };
-
-    this.handleList = this.handleList.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleShowConfirmation = this.handleShowConfirmation.bind(this);
-    this.handleHideConfirmation = this.handleHideConfirmation.bind(this);
-  }
-
-  handleList() {
-    const { location } = this.props;
-    browserHistory.push({
+  handleList = () => {
+    this.props.history.push({
       pathname: '/board',
-      query: location.query,
+      search: this.props.location.search,
     });
-  }
+  };
 
-  handleEdit() {
-    const { params, location } = this.props;
-    browserHistory.push({
-      pathname: `/board/edit/${params.id}`,
-      query: location.query,
+  handleEdit = () => {
+    const { history, match, location } = this.props;
+    history.push({
+      pathname: `/board/edit/${match.params.id}`,
+      search: location.search,
     });
-  }
+  };
 
-  handleRemove() {
-    const { params } = this.props;
-    this.props.remove(params.id).then(() => browserHistory.goBack());
+  handleRemove = () => {
+    this.props.remove(this.props.match.params.id).then(() => {
+      this.props.history.goBack();
+    });
     this.handleHideConfirmation();
-  }
+  };
 
-  handleShowConfirmation() {
+  handleShowConfirmation = () => {
     this.setState(toggleConfirmation(true));
-  }
+  };
 
-  handleHideConfirmation() {
+  handleHideConfirmation = () => {
     this.setState(toggleConfirmation(false));
-  }
+  };
 
   render() {
     const { signedInfo } = this.props;
@@ -163,7 +163,7 @@ class BoardView extends React.Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({
     signedInfo: state.user.signedInfo,
     model: state.board.detail,
@@ -172,4 +172,4 @@ export default connect(
     fetchDetail,
     remove,
   }, dispatch),
-)(BoardView);
+)(BoardView));

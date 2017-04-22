@@ -5,7 +5,13 @@ import {
   USER_FAILURE,
 } from '../actionTypes';
 
-export default function (state = {}, action) {
+const initState = {
+  error: null,
+  isFetching: false,
+  signedInfo: null,
+};
+
+export default function (state = initState, action) {
   const { type, error, signedInfo } = action;
   switch (type) {
     case USER_REQUEST:

@@ -1,17 +1,12 @@
-// @flow
-
 import React from 'react';
+import PropTypes from 'prop-types';
 import RBPagination from 'react-bootstrap/lib/Pagination';
 
-type Props = {
-  pages?: number,
-  page?: number,
-  onSelect?: (page: number) => void,
-};
-
-const Pagination = ({ pages, page, onSelect }: Props) => !pages && !page
-  ? null
-  : (
+const Pagination = ({ pages, page, onSelect }) => {
+  if (!pages && !page) {
+    return null;
+  }
+  return (
     <RBPagination
       items={pages}
       activePage={page}
@@ -23,6 +18,13 @@ const Pagination = ({ pages, page, onSelect }: Props) => !pages && !page
       next
     />
   );
+};
+
+Pagination.propTypes = {
+  pages: PropTypes.number,
+  page: PropTypes.number,
+  onSelect: PropTypes.func,
+};
 
 Pagination.defaultProps = {
   pages: null,

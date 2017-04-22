@@ -5,7 +5,7 @@ Create your react apps with boilerplate.
 ## Usage
 - [x] React
 - [x] Redux
-- [x] React Router
+- [x] React Router v4 :sparkles: (using react-router-config)
 - [x] React hot reload
 - [x] Universal rendering (Server rendering)
 - [x] Express

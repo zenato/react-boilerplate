@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
@@ -61,7 +62,6 @@ class Setting extends Component {
 
   render() {
     const { isFetching, error, signedInfo } = this.props.model;
-
     return (
       <div>
         <Helmet title="Setting" />
@@ -99,7 +99,7 @@ class Setting extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({
     model: state.user,
   }),
@@ -107,4 +107,4 @@ export default connect(
     fetchSignedInfo,
     updateSignedInfo,
   }, dispatch),
-)(Setting);
+)(Setting));

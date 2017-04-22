@@ -1,8 +1,9 @@
+import qs from 'querystring';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import browserHistory from 'react-router/lib/browserHistory';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import Button from 'react-bootstrap/lib/Button';
@@ -15,15 +16,16 @@ import { signIn } from '../../state/actions/user';
 
 class SignIn extends Component {
   static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
     model: PropTypes.shape({
       isFetching: PropTypes.bool,
       error: PropTypes.shape({}),
       signedInfo: PropTypes.shape({}),
     }).isRequired,
     location: PropTypes.shape({
-      query: PropTypes.shape({
-        next: PropTypes.string,
-      }),
+      search: PropTypes.string,
     }).isRequired,
     signIn: PropTypes.func.isRequired,
   };
@@ -36,27 +38,26 @@ class SignIn extends Component {
     return <Alert bsStyle="danger">{message}</Alert>;
   }
 
-  constructor(props) {
-    super(props);
+  constraints = {
+    email: { presence: { message: 'Required' } },
+    password: { presence: { message: 'Required' } },
+  };
 
-    this.constraints = {
-      email: { presence: { message: 'Required' } },
-      password: { presence: { message: 'Required' } },
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit(values) {
+  handleSubmit = (values) => {
     if (this.props.model.isFetching) return;
 
     this.props.signIn(values).then(() => {
       const { location, model } = this.props;
       if (!model.error) {
-        browserHistory.push({ pathname: location.query.next });
+        const next = qs.parse(location.search.substring(1)).next || '?';
+        const url = next.split('?');
+        this.props.history.push({
+          pathname: url[0],
+          search: url[1] || null,
+        });
       }
     });
-  }
+  };
 
   render() {
     const { isFetching, error } = this.props.model;
@@ -93,11 +94,11 @@ class SignIn extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   state => ({
     model: state.user,
   }),
   dispatch => bindActionCreators({
     signIn,
   }, dispatch),
-)(SignIn);
+)(SignIn));
