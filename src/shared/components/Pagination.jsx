@@ -10,21 +10,22 @@ type Props = {
 };
 
 const Pagination = ({ pages, page, onSelect }: Props) => {
-  const isNotExistPage = !pages && !page;
-  return isNotExistPage
-    ? null
-    : (
-      <RBPagination
-        items={pages}
-        activePage={page}
-        onSelect={onSelect}
-        style={{ marginTop: 0 }}
-        first
-        last
-        prev
-        next
-      />
-    );
+  if (!pages && !page) {
+    return null;
+  }
+
+  return (
+    <RBPagination
+      items={pages}
+      activePage={page}
+      onSelect={onSelect}
+      style={{ marginTop: 0 }}
+      first
+      last
+      prev
+      next
+    />
+  );
 };
 
 Pagination.defaultProps = {
